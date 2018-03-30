@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.crypto.Mac;
 
 import br.com.tradutores.util.Util;
 
