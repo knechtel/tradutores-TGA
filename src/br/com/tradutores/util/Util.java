@@ -9,7 +9,7 @@ public class Util {
 
 	private static Map<String, Integer> tabelaSimbolo = new HashMap<String, Integer>();
 
-	
+	static boolean  nextLine =false;
 	private static Integer contTabelaSimbolo = 0;
 	public static void regex(String line) {
 
@@ -21,19 +21,19 @@ public class Util {
 
 		} else {
 
-			if (line.equals(" ")) { 
-				// espaço em branco
-			} else {
 
-				System.out.println(line);
-				String pattern = "float|\\{|\\)|\\(|void|[A-Z][a-z]*|[A-Z][a-z]*[A-Z][a-z]*";
+             	System.out.println(line);
+				String pattern = "//|=|float|\\{|\\)|\\(|void|[A-z]*[0-9]|[A-z]*";
 				Pattern r = Pattern.compile(pattern);
 				Matcher m = r.matcher(line);
 
 				while (m.find()) {
 					String min = m.group();	
-					
-					if (min.trim().equals("void")) {
+					if(min.trim().equals("//")){
+						System.out.println("comentário : "+line);
+						nextLine = true;
+					}
+				    if (min.trim().equals("void")) {
 						System.out.println("[reserved_word, void] ");
 					}
 					
@@ -52,8 +52,12 @@ public class Util {
 					if(min.trim().equals("}")){					
 						System.out.println("[r_bracket, }]");
 					}
+					if(min.trim().equals("=")){
+						System.out.println(" [Equal_Op, =] ");
+					}
+					
 					if(min.trim().equals("float")){
-						System.out.println("[reserved_word, float] [id, 1");
+						System.out.println("[reserved_word, float] ");
 						String str = line.replace("float", " ");
 						String strnew = str.replace(";", "");
 						
@@ -77,7 +81,7 @@ public class Util {
 					System.out.println(min);
 
 				}
-			}
+			
 		}
 	}
 }
