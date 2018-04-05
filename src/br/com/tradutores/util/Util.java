@@ -9,7 +9,7 @@ public class Util {
 
 	private static Map<String, Integer> tabelaSimbolo = new HashMap<String, Integer>();
 
-	static boolean  nextLine =false;
+	static boolean  nextLine =true;
 	private static Integer contTabelaSimbolo = 0;
 	public static void regex(String line) {
 
@@ -23,15 +23,18 @@ public class Util {
 
 
              	System.out.println(line);
-				String pattern = "//|=|float|\\{|\\)|\\(|void|[A-z]*[0-9]|[A-z]*";
+				String pattern = "//|=|float|\\{|\\)|\\(|void|[A-z]*[0-9]|[A-z]*/|[a-b]*";
 				Pattern r = Pattern.compile(pattern);
 				Matcher m = r.matcher(line);
 
-				while (m.find()) {
+				while (m.find()&&nextLine) {
 					String min = m.group();	
+					
+					
+					
 					if(min.trim().equals("//")){
 						System.out.println("comentário : "+line);
-						nextLine = true;
+						nextLine=false;
 					}
 				    if (min.trim().equals("void")) {
 						System.out.println("[reserved_word, void] ");
@@ -77,8 +80,6 @@ public class Util {
 						}
 						
 					}
-					
-					System.out.println(min);
 
 				}
 			
