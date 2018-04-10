@@ -7,14 +7,14 @@ import java.util.regex.Pattern;
 
 import br.com.tradutores.bean.Token;
 
-public class Util {
+public class Scanner {
 
 	private static Map<String, Token> tabelaSimbolo = new HashMap<String, Token>();
 
 	static boolean nextLine = true;
 	private static Integer contTabelaSimbolo = 0;
 	
-	@SuppressWarnings("unused")
+
 	private static Integer escopo=0;
 
 	public static void regex(String line) {

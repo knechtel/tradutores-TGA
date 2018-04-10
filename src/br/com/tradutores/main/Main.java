@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-import br.com.tradutores.util.Util;
+import br.com.tradutores.util.Scanner;
 
 public class Main {
 
@@ -19,7 +19,7 @@ public class Main {
 		) {
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 				//System.out.println(line);
-				Util.regex(line);
+				Scanner.regex(line);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -35,7 +35,7 @@ public class Main {
 		try (BufferedReader reader = new BufferedReader(
 				new FileReader(System.getProperty("user.dir") + "\\" + "codigo.c"));) {
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-				Util.regex(line);
+				Scanner.regex(line);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
