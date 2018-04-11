@@ -62,25 +62,36 @@ public class Scanner {
 				}
 				if (min.trim().equals("=")) {
 					System.out.println(" [Equal_Op, =] ");
-				
+
 					String[] sArray = lookAhead.split("=");
-					
-					System.out.println("Size "+sArray.length);
-					System.out.println("token -> "+sArray[0]);
+
+					System.out.println("Size " + sArray.length);
+					System.out.println("token -> " + sArray[0]);
 					Token token = tabelaSimbolo.get(sArray[0].trim());
-					System.out.println("objeto token "+token);
-					
-					if(sArray.length==2) {
+					System.out.println("objeto token " + token);
+					System.out.println("verify : " + sArray[1]);
+					if (sArray.length == 2) {
 						String aux = sArray[1].replace(";", "");
-						
-						if(Util.isNumber(aux)) {
-							token.setLexema(aux);
-							tabelaSimbolo.put(sArray[0].toString(),token);
-							System.out.println("lexema = "+token.getLexema());
+
+						if (aux.contains("//")) {
+							String[] noComentario = sArray[1].split("//");
+							aux = noComentario[0];
 						}
+
+						if (Util.isNumberDouble(aux)) {
+							token.setLexema(aux);
+							tabelaSimbolo.put(sArray[0].toString(), token);
+							System.out.println("lexema = " + token.getLexema());
+						} else {
+							Util.scannerAux(sArray[1]);
+							System.out.println("aquiiiiiii >>>>>>>>>>");
+						}
+
+					} else {
+
+						System.out.println("é maior que dois ");
 					}
-					
-					
+
 				}
 
 				if (tabelaSimbolo.containsKey(min.trim())) {
@@ -118,4 +129,13 @@ public class Scanner {
 
 		}
 	}
+
+	public static Map<String, Token> getTabelaSimbolo() {
+		return tabelaSimbolo;
+	}
+
+	public static void setTabelaSimbolo(Map<String, Token> tabelaSimbolo) {
+		Scanner.tabelaSimbolo = tabelaSimbolo;
+	}
+
 }

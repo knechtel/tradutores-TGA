@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import br.com.tradutores.util.Util;
+
 
 public class Test {
 	
@@ -17,14 +19,7 @@ public class Test {
 		) {
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 				//System.out.println(line);
-				String pattern = "[A-z]*[a-z]*[0-9]*";
-				Pattern r = Pattern.compile(pattern);
-				Matcher m = r.matcher(line);
-
-				while (m.find() ) {
-					String min = m.group();
-					System.out.println(min);
-					}
+				Util.scannerAux(line);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
