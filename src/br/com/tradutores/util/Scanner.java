@@ -13,9 +13,9 @@ public class Scanner {
 
 	static boolean nextLine = true;
 	private static Integer contTabelaSimbolo = 0;
-	
+	private static String lookAhead = "";
 
-	private static Integer escopo=0;
+	private static Integer escopo = 0;
 
 	public static void regex(String line) {
 
@@ -26,13 +26,13 @@ public class Scanner {
 			System.out.println(line);
 
 		} else {
-
+			lookAhead = line;
 			System.out.println(line);
-			String pattern = "//|=|float|\\{|\\)|\\(|void|[A-z]*[0-9]|[A-z]*/|[a-b]*";
+			String pattern = "//|=|float|\\{|\\)|\\(|void|[A-z]*[0-9]|[A-z]*/|[a-b]*|[A-z][a-z][A-z]*[0-9]|[A-Z]*";
 			Pattern r = Pattern.compile(pattern);
 			Matcher m = r.matcher(line);
 
-			while (m.find() ) {
+			while (m.find()) {
 				String min = m.group();
 
 				if (min.trim().equals("//")) {
@@ -62,6 +62,29 @@ public class Scanner {
 				}
 				if (min.trim().equals("=")) {
 					System.out.println(" [Equal_Op, =] ");
+				
+					String[] sArray = lookAhead.split("=");
+					
+					System.out.println("Size "+sArray.length);
+					System.out.println("token -> "+sArray[0]);
+					Token token = tabelaSimbolo.get(sArray[0].trim());
+					System.out.println("objeto token "+token);
+					
+					if(sArray.length==2) {
+						String aux = sArray[1].replace(";", "");
+						
+						if(Util.isNumber(aux)) {
+							token.setLexema(aux);
+							tabelaSimbolo.put(sArray[0].toString(),token);
+							System.out.println("lexema = "+token.getLexema());
+						}
+					}
+					
+					
+				}
+
+				if (tabelaSimbolo.containsKey(min.trim())) {
+
 				}
 
 				if (min.trim().equals("float")) {
@@ -73,14 +96,15 @@ public class Scanner {
 
 					for (String sr : arrayString) {
 						if (tabelaSimbolo.containsKey(sr)) {
-							
+							System.out.println("entrou aqui");
 						} else {
 
 							Token t = new Token();
 							t.setEscopo(escopo);
 							t.setId(contTabelaSimbolo);
-							t.setPadrao(str.trim());
-							tabelaSimbolo.put(t.getPadrao(),t);
+							t.setPadrao(sr.trim());
+							tabelaSimbolo.put(t.getPadrao(), t);
+							System.out.println(t.getPadrao() + " padrao  -- -- -- -- ");
 							System.out.println("[id, " + contTabelaSimbolo + "]");
 							contTabelaSimbolo++;
 
@@ -89,8 +113,6 @@ public class Scanner {
 					}
 
 				}
-				
-				
 
 			}
 
