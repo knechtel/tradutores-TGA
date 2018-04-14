@@ -32,8 +32,13 @@ public class Scanner {
 		} else {
 			lookAhead = line;
 			System.out.println(line);
-			String pattern = "\\(|[//|"
-					+ "/\\*.+"
+			String pattern = 	 "\"|"+ 
+					"\\(|"+
+					"\\}|"
+					+ "\\)|"
+					+ "[//|"
+					+ "\"+"
+					+ "|/\\*.+"
 					+ "|\\*/|\""
 					+ "|;"
 					+ "|[0-9]+.[0-9]*"
@@ -42,8 +47,8 @@ public class Scanner {
 					+ "=|"
 					+ "float|"
 					+ "\\{|"
-					+ "\\)|"
-					+ ""
+					
+				
 					+ "void|"
 					+ "[A-z]*[0-9]|"
 					+ "a-z]*|int";
@@ -52,6 +57,14 @@ public class Scanner {
 
 			while (m.find()) {
 				String min = m.group();
+				
+				
+				if (min.trim().contains("\"") ) {
+					aspasDuplas = !aspasDuplas;
+
+					System.out.println("começa string ");
+				}
+
 				
 				if (min.contains("/*")) {
 					System.out.println("Começa comentário");
@@ -85,11 +98,7 @@ public class Scanner {
 					System.out.println("[r_paren, )]");
 				}
 
-				if (min.trim().equals("\"") && !nextLine && !comentarioMultiLinha) {
-					aspasDuplas = !aspasDuplas;
-
-					System.out.println("estou aqui ");
-				}
+		
 				if (min.trim().equals("{") && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
 					System.out.println("[l_bracket, {]");
 					escopo++;
@@ -125,10 +134,10 @@ public class Scanner {
 							Token t1 = tabelaSimbolo.get(tokenAux.trim());
 							System.out.println("[id, " + t1.getId() + "]");
 							contTabelaSimbolo++;
-							System.out.println(" contains");
+							
 						}
 
-						System.out.println("segunda parte" + aux);
+						
 					} else {
 
 					}
@@ -136,7 +145,7 @@ public class Scanner {
 				}
 
 				if (tabelaSimbolo.containsKey(min.trim()) && !comentarioMultiLinha) {
-					System.out.println("[id, " + tabelaSimbolo.get(min.trim()).getId() + "]");
+				//	System.out.println("[id, " + tabelaSimbolo.get(min.trim()).getId() + "]");
 				}
 
 				if (min.trim().equals("float") && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
@@ -198,6 +207,8 @@ public class Scanner {
 					System.out.println("[num, " + min.trim() + "]");
 				}
 
+			
+				
 				nextLine = false;
 
 			}
