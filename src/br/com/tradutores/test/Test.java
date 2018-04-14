@@ -20,6 +20,7 @@ public class Test {
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 				//System.out.println(line);
 				Util.scannerAux(line);
+				
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
