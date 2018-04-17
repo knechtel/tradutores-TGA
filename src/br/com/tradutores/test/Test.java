@@ -9,18 +9,22 @@ import java.util.regex.Pattern;
 
 import br.com.tradutores.util.Util;
 
-
 public class Test {
-	
+	public static void test(Integer i) {
+		if (i <= 0) {
+
+		}
+	}
+
 	public static void main(String[] args) {
 		try (BufferedReader reader = new BufferedReader(
 				new FileReader(System.getProperty("user.dir") + "/" + "test.txt"));
 
 		) {
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-				//System.out.println(line);
-				Util.scannerAux(line);
-				
+				// System.out.println(line);
+				Util.scannerAuxInt(line);
+
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -30,6 +34,5 @@ public class Test {
 			e.printStackTrace();
 		}
 	}
-	
 
 }

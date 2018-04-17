@@ -1,2 +1,1 @@
-int
-printf
+int CalculoMedia(int *i, int j, char k) 
