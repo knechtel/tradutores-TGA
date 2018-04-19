@@ -1,6 +1,8 @@
 package br.com.tradutores.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +13,7 @@ import br.com.tradutores.main.Main;
 public class Scanner {
 
 	public static Map<String, Token> tabelaSimbolo = new HashMap<String, Token>();
-
+	public static List<Map> listaTabelaDeSimbolo = new ArrayList<Map>();
 	static boolean nextLine = true;
 
 	static boolean comentarioMultiLinha = false;
@@ -21,7 +23,7 @@ public class Scanner {
 	private static String lookAhead = "";
 
 	private static Integer escopo = 0;
-	 static Integer cont=0;
+	static Integer cont = 0;
 
 	public static void regex(String line) {
 
@@ -35,9 +37,10 @@ public class Scanner {
 			lookAhead = line;
 			// System.out.println(line);
 
-			String pattern = "for|while|//|\\+|[A-Z][a-z]+[a-z]*[A-z]+[0-9]"+  //melhorar isso
-					"|[0-9].[0-9]+|\\*+( )+[0-9]+|[\\*]+[\\(]+[a-z]+|" + "\\(|[\\*]+( )*[a-z]+|%|:|[A-Z]+|" + "char|" + "/\\*.+" // inicio
-																												// comentário
+			String pattern = "for|while|//|\\+|[A-Z][a-z]+[a-z]*[A-z]+[0-9]" + // melhorar isso
+					"|[0-9].[0-9]+|\\*+( )+[0-9]+|[\\*]+[\\(]+[a-z]+|" + "\\(|[\\*]+( )*[a-z]+|%|:|[A-Z]+|" + "char|"
+					+ "/\\*.+" // inicio
+					// comentário
 					+ "|\\*/|" + // fim comentário
 					"<=|" + ">=|" + "<|" + ">|" + ">=|" + "==|" + "=|" + "[0-9]+|" + "==|" + // relacional ==
 					"\\(|" + // abre parenteses
@@ -80,11 +83,10 @@ public class Scanner {
 						if (coment.length >= 2) {
 							System.out.println("comentário : " + coment[1]);
 						}
-						if(coment.length==1) {
+						if (coment.length == 1) {
 							System.out.println("comentário : " + coment[0]);
 						}
-						
-						
+
 						nextLine = false;
 					}
 
@@ -139,6 +141,8 @@ public class Scanner {
 					if (min.trim().equals("}") && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
 						System.out.println("[r_bracket, }]");
 						escopo--;
+
+						listaTabelaDeSimbolo.add(tabelaSimbolo);
 					}
 
 					if (min.trim().equals("/") && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
@@ -180,56 +184,49 @@ public class Scanner {
 					if (min.trim().contains("*") && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
 
 						if (escopo == 1) {
-						
-							
-						
-							
-							//trata (parentes) e sem parenteses
-							
-							
+
+							// trata (parentes) e sem parenteses
+
 							String subString = line;
-							
-							
+
 							String trat = min.trim().replaceAll(" ", "");
 							trat = trat.replace("*", "");
-							if(trat.contains("(")) {
+							if (trat.contains("(")) {
 								System.out.println("[l_paren, (]");
 							}
-							
-							String finalTrat= trat.replace("(", "");
-							
-							
+
+							String finalTrat = trat.replace("(", "");
+
 							String last = finalTrat.replace(")", "");
 							Token inToken = tabelaSimbolo.get(last.trim());
-							
+
 							// é um ponteiro
 							if (inToken != null) {
 								if (inToken.isPonteiro()) {
 									System.out.println("ID [" + inToken.getId() + "]");
-							
+
 								}
-							
+
 							}
-							
-							//trata numeros a pós uma multiplicao
-							
-							String test =min.trim().replace("*", "");
-							String test1 = test.replace(" ", "" );
-							if(Util.isNumberInteger(test1)) {
+
+							// trata numeros a pós uma multiplicao
+
+							String test = min.trim().replace("*", "");
+							String test1 = test.replace(" ", "");
+							if (Util.isNumberInteger(test1)) {
 								System.out.println("[Mulplicacao, *]");
-								System.out.println("[Num, "+test1+"]");
+								System.out.println("[Num, " + test1 + "]");
 							}
-							
-//							if(Util.isNumberDouble(test1)) {
-//								System.out.println("[Mulplicacao, *]");
-//							}
-						
+
+							// if(Util.isNumberDouble(test1)) {
+							// System.out.println("[Mulplicacao, *]");
+							// }
+
 						}
 
 					}
-					
 
-					if (tabelaSimbolo.containsKey(min.trim())  && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
+					if (tabelaSimbolo.containsKey(min.trim()) && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
 						// System.out.println("[id, " + tabelaSimbolo.get(min.trim()).getId() + "]");
 					}
 
@@ -247,7 +244,7 @@ public class Scanner {
 
 							for (String sr : arrayString) {
 								if (tabelaSimbolo.containsKey(sr)) {
-									
+
 								} else {
 
 									Token t = new Token();
@@ -255,7 +252,7 @@ public class Scanner {
 									t.setId(contTabelaSimbolo);
 
 									t.setPonteiro(sr.trim().contains("*"));
-									System.out.println("aqui "+t.isPonteiro());
+									System.out.println("aqui " + t.isPonteiro());
 									t.setPadrao(sr.trim().replace("*", "").trim());
 									tabelaSimbolo.put(t.getPadrao(), t);
 									// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
@@ -274,10 +271,8 @@ public class Scanner {
 
 							Util.scannerAuxInt(line);
 
-						} else {
-							
-							
-							
+						} else if (escopo >= 1) {
+
 							System.out.println("[reserved_word, int] ");
 							String str = line.replace("int", " ");
 							String strnew = str.replace(";", "");
@@ -294,7 +289,7 @@ public class Scanner {
 									t.setId(contTabelaSimbolo);
 
 									t.setPonteiro(sr.trim().contains("*"));
-									System.out.println("aqui "+t.isPonteiro());
+								//	System.out.println("aqui " + t.isPonteiro());
 									t.setPadrao(sr.trim().replace("*", "").trim());
 									tabelaSimbolo.put(t.getPadrao(), t);
 									// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
@@ -324,13 +319,12 @@ public class Scanner {
 									System.out.println("entrou aqui");
 								} else {
 
-
 									Token t = new Token();
 									t.setEscopo(escopo);
 									t.setId(contTabelaSimbolo);
 
 									t.setPonteiro(sr.trim().contains("*"));
-								//	System.out.println("aqui "+t.isPonteiro());
+									// System.out.println("aqui "+t.isPonteiro());
 									t.setPadrao(sr.trim().replace("*", "").trim());
 									tabelaSimbolo.put(t.getPadrao(), t);
 									// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
@@ -342,7 +336,7 @@ public class Scanner {
 
 						}
 					}
-					//trata ponteiro de char
+					// trata ponteiro de char
 					if (min.trim().equals("char") && !nextLine && !aspasDuplas && !comentarioMultiLinha) {
 						if (escopo == 0) {
 							System.out.println("[reserved_word, char] ");
@@ -359,13 +353,12 @@ public class Scanner {
 									System.out.println("entrou aqui");
 								} else {
 
-
 									Token t = new Token();
 									t.setEscopo(escopo);
 									t.setId(contTabelaSimbolo);
 
 									t.setPonteiro(sr.trim().contains("*"));
-									System.out.println("aqui "+t.isPonteiro());
+									System.out.println("aqui " + t.isPonteiro());
 									t.setPadrao(sr.trim().replace("*", "").trim());
 									tabelaSimbolo.put(t.getPadrao(), t);
 									// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
@@ -387,13 +380,13 @@ public class Scanner {
 
 					if (Util.isNumberDouble(min.trim()) && !aspasDuplas && !comentarioMultiLinha) {
 						String subString = line;
-						
+
 						System.out.println("[num, " + min.trim() + "]");
 					}
 					if (tabelaSimbolo.containsKey(min.trim()) && !aspasDuplas && !comentarioMultiLinha) {
 						Token t1 = tabelaSimbolo.get(min.trim());
 
-						 System.out.println("[id, " + t1.getId() + "]");
+						System.out.println("[id, " + t1.getId() + "]");
 
 						// System.out.println(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<");
 

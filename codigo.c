@@ -4,7 +4,7 @@
 int main() 
 { 
 
-    string * pt; 
+    int * pt; 
     int i; 
       
     pt = 5; //Atribui o endereço do vetor 
