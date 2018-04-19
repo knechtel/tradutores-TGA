@@ -10,6 +10,8 @@ public class Token {
 	
 	private Integer escopo;
 
+	private boolean isPonteiro=false;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -45,6 +47,14 @@ public class Token {
 	@Override
 	public String toString() {
 		return "Token [id=" + id + ", padrao=" + padrao + "]";
+	}
+
+	public boolean isPonteiro() {
+		return isPonteiro;
+	}
+
+	public void setPonteiro(boolean isPonteiro) {
+		this.isPonteiro = isPonteiro;
 	}
 	
 	

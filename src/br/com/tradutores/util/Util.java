@@ -14,80 +14,66 @@ public class Util {
 	static List<Token> listLookAhead = new ArrayList<Token>();
 	boolean desativa = false;
 
-	public static double compExpress() {
-		boolean comp = false;
-		boolean divisao = false;
-		Double vlr = 0.0;
-
-		for (int i = 0; i < listLookAhead.size(); i++) {
-			if (i + 1 < listLookAhead.size()) {
-
-				Token t = listLookAhead.get(i);
-				Token tNext = listLookAhead.get(i + 1);
-				Double result = 0.0;
-				Integer resultInt = 0;
-
-				boolean isDouble = false;
+	public static void scannerAuxChar(String line) {
+		//String pattern = "\\(|[\\*]+[a-z]+" ;
+				String pattern = "\\(|[\\*]+( )*[a-z]+|" + "[a-z]+|char";
+				Pattern r = Pattern.compile(pattern);
+				Matcher m = r.matcher(line);
 				boolean isInt = false;
-				if (!t.getPadrao().equals(")") && !t.getPadrao().equals("(") && !t.getPadrao().equals("+")
-						&& !t.getPadrao().equals("-") && !t.getPadrao().equals("*")) {
-				}
+				boolean isPointer = false;
+				boolean inicioCompVarMetodos = false;
+				while (m.find()) {
+					String str = m.group();
 
-				if (!tNext.getPadrao().equals(")") && !tNext.getPadrao().equals("(") && !tNext.getPadrao().equals("+")
-						&& !tNext.getPadrao().equals("-") && !tNext.getPadrao().equals("*")) {
+					if (str.equals("(")) {
+						inicioCompVarMetodos = true;
+					}
 
-					Token tNexProx = listLookAhead.get(i + 2);
-					String s = getOperador(tNexProx.getLexema());
-
-					if (s.trim().equals("+")) {
-						if (isDouble) {
-							result = result + Double.parseDouble(tNext.getLexema());
-							isDouble = false;
+					if (isInt && inicioCompVarMetodos) {
+						
+						if(str.contains("*")) {
+							isPointer=true;
+							str=str.replace("*", "");
 						}
-
-						if (isInt) {
-							resultInt = resultInt + Integer.parseInt(tNext.getLexema());
-							isInt = false;
+						if (!br.com.tradutores.util.Scanner.tabelaSimbolo.containsKey(str.trim())) {
+							Token t = new Token();
+						
+							t.setPadrao(str.trim());
+							t.setId(br.com.tradutores.util.Scanner.contTabelaSimbolo);
+							t.setPonteiro(isPointer);
+							System.out.println("char "+str.trim());
+							//if (str.contains("*"))
+								
+							
+							br.com.tradutores.util.Scanner.tabelaSimbolo.put(t.getPadrao(), t);
+							// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
+							System.out.println("[id, " + br.com.tradutores.util.Scanner.contTabelaSimbolo + "]");
+							br.com.tradutores.util.Scanner.contTabelaSimbolo++;
+						}else {
+							
 						}
-
-					} else if (s.trim().equals("-")) {
-
-						if (isDouble) {
-							result = result - Double.parseDouble(tNext.getLexema());
-							isDouble = false;
-						}
-
-						if (isInt) {
-							resultInt = resultInt - Integer.parseInt(tNext.getLexema());
-							isInt = false;
-						}
-
-					} else if (s.trim().equals("*")) {
-
-					} else if (s.trim().equals("/")) {
+					} else {
 
 					}
 
-				} else {
-					System.out.println("verificar...");
-
+					if (str.equals("char") && inicioCompVarMetodos) {
+						isInt = true;
+					} else {
+						isInt = false;
+					}
+					
+					isPointer=false;
+					
 				}
-
-			} else {
-
-			}
-		}
-
-		return vlr;
 	}
-
 	public static void scannerAuxInt(String line) {
 
-		String pattern = "\\(|[A-Z]+[a-z]+[A-Z]+[a-z]+|" + "[a-z]+|int";
+		//String pattern = "\\(|[\\*]+[a-z]+" ;
+		String pattern = "\\(|[\\*]+( )*[a-z]+|" + "[a-z]+|int";
 		Pattern r = Pattern.compile(pattern);
 		Matcher m = r.matcher(line);
 		boolean isInt = false;
-
+		boolean isPointer = false;
 		boolean inicioCompVarMetodos = false;
 		while (m.find()) {
 			String str = m.group();
@@ -97,14 +83,27 @@ public class Util {
 			}
 
 			if (isInt && inicioCompVarMetodos) {
-				if (!br.com.tradutores.util.Scanner.tabelaSimbolo.containsKey(str)) {
+				
+				if(str.contains("*")) {
+					isPointer=true;
+					str=str.replace("*", "");
+				}
+				if (!br.com.tradutores.util.Scanner.tabelaSimbolo.containsKey(str.trim())) {
 					Token t = new Token();
-					t.setPadrao(str);
+				
+					t.setPadrao(str.trim());
 					t.setId(br.com.tradutores.util.Scanner.contTabelaSimbolo);
+					t.setPonteiro(isPointer);
+				
+					//if (str.contains("*"))
+						
+					
 					br.com.tradutores.util.Scanner.tabelaSimbolo.put(t.getPadrao(), t);
 					// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
 					System.out.println("[id, " + br.com.tradutores.util.Scanner.contTabelaSimbolo + "]");
 					br.com.tradutores.util.Scanner.contTabelaSimbolo++;
+				}else {
+					
 				}
 			} else {
 
@@ -115,21 +114,21 @@ public class Util {
 			} else {
 				isInt = false;
 			}
-
-			// System.out.println(str);
+			
+			isPointer=false;
+			
 		}
 
-		// System.out.println("FIM_FUNCAO_ALERTA");
 	}
 
-	
 	public static void scannerAuxFloat(String line) {
 
-		String pattern = "\\(|[A-Z]+[a-z]+[A-Z]+[a-z]+|" + "[a-z]+|int";
+		//String pattern = "\\(|[\\*]+[a-z]+" ;
+		String pattern = "\\(|[\\*]+( )*[a-z]+|" + "[a-z]+|char";
 		Pattern r = Pattern.compile(pattern);
 		Matcher m = r.matcher(line);
 		boolean isInt = false;
-
+		boolean isPointer = false;
 		boolean inicioCompVarMetodos = false;
 		while (m.find()) {
 			String str = m.group();
@@ -139,14 +138,27 @@ public class Util {
 			}
 
 			if (isInt && inicioCompVarMetodos) {
-				if (!br.com.tradutores.util.Scanner.tabelaSimbolo.containsKey(str)) {
+				
+				if(str.contains("*")) {
+					isPointer=true;
+					str=str.replace("*", "");
+				}
+				if (!br.com.tradutores.util.Scanner.tabelaSimbolo.containsKey(str.trim())) {
 					Token t = new Token();
-					t.setPadrao(str);
+				
+					t.setPadrao(str.trim());
 					t.setId(br.com.tradutores.util.Scanner.contTabelaSimbolo);
+					t.setPonteiro(isPointer);
+					System.out.println("char "+str.trim());
+					//if (str.contains("*"))
+						
+					
 					br.com.tradutores.util.Scanner.tabelaSimbolo.put(t.getPadrao(), t);
 					// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
 					System.out.println("[id, " + br.com.tradutores.util.Scanner.contTabelaSimbolo + "]");
 					br.com.tradutores.util.Scanner.contTabelaSimbolo++;
+				}else {
+					
 				}
 			} else {
 
@@ -157,55 +169,69 @@ public class Util {
 			} else {
 				isInt = false;
 			}
-
-			// System.out.println(str);
+			
+			isPointer=false;
+			
 		}
 
 		// System.out.println("FIM_FUNCAO_ALERTA");
 	}
-	
-	
+
 	public static void scannerAuxString(String line) {
 
-		String pattern = "\\(|[A-Z]+[a-z]+[A-Z]+[a-z]+|" + "[a-z]+|int";
-		Pattern r = Pattern.compile(pattern);
-		Matcher m = r.matcher(line);
-		boolean isInt = false;
+		//String pattern = "\\(|[\\*]+[a-z]+" ;
+				String pattern = "\\(|[\\*]+( )*[a-z]+|" + "[a-z]+|char";
+				Pattern r = Pattern.compile(pattern);
+				Matcher m = r.matcher(line);
+				boolean isInt = false;
+				boolean isPointer = false;
+				boolean inicioCompVarMetodos = false;
+				while (m.find()) {
+					String str = m.group();
 
-		boolean inicioCompVarMetodos = false;
-		while (m.find()) {
-			String str = m.group();
+					if (str.equals("(")) {
+						inicioCompVarMetodos = true;
+					}
 
-			if (str.equals("(")) {
-				inicioCompVarMetodos = true;
-			}
+					if (isInt && inicioCompVarMetodos) {
+						
+						if(str.contains("*")) {
+							isPointer=true;
+							str=str.replace("*", "");
+						}
+						if (!br.com.tradutores.util.Scanner.tabelaSimbolo.containsKey(str.trim())) {
+							Token t = new Token();
+						
+							t.setPadrao(str.trim());
+							t.setId(br.com.tradutores.util.Scanner.contTabelaSimbolo);
+							t.setPonteiro(isPointer);
+							System.out.println("char "+str.trim());
+							//if (str.contains("*"))
+								
+							
+							br.com.tradutores.util.Scanner.tabelaSimbolo.put(t.getPadrao(), t);
+							// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
+							System.out.println("[id, " + br.com.tradutores.util.Scanner.contTabelaSimbolo + "]");
+							br.com.tradutores.util.Scanner.contTabelaSimbolo++;
+						}else {
+							
+						}
+					} else {
 
-			if (isInt && inicioCompVarMetodos) {
-				if (!br.com.tradutores.util.Scanner.tabelaSimbolo.containsKey(str)) {
-					Token t = new Token();
-					t.setPadrao(str);
-					t.setId(br.com.tradutores.util.Scanner.contTabelaSimbolo);
-					br.com.tradutores.util.Scanner.tabelaSimbolo.put(t.getPadrao(), t);
-					// System.out.println(t.getPadrao() + " padrao -- -- -- -- ");
-					System.out.println("[id, " + br.com.tradutores.util.Scanner.contTabelaSimbolo + "]");
-					br.com.tradutores.util.Scanner.contTabelaSimbolo++;
-				}
-			} else {
+					}
 
-			}
-
-			if (str.equals("string") && inicioCompVarMetodos) {
-				isInt = true;
-			} else {
-				isInt = false;
-			}
-
-			// System.out.println(str);
+					if (str.equals("string") && inicioCompVarMetodos) {
+						isInt = true;
+					} else {
+						isInt = false;
+					}
+					
+					isPointer=false;
 		}
 
 		// System.out.println("FIM_FUNCAO_ALERTA");
 	}
-	
+
 	public static String getOperador(String str) {
 
 		if (str.trim().equals("+")) {

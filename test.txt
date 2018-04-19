@@ -1,1 +1,1 @@
-int CalculoMedia(int *i, int j, char k) 
+int CalculoMedia(int *  i, int j) 
